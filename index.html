@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baothichlamcode</title>
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --text-color: #f0f6fc;
+      --subtext-color: #8b949e;
+      --border-color: #30363d;
+      --card-bg: #161b22;
+      --accent-color: #58a6ff;
+      --hover-bg: #21262d;
+      --btn-blue: #2d88d8;
+      --btn-blue-hover: #1f74c0;
+    }
+
+    body.light-theme {
+      --bg-color: #f6f8fa;
+      --text-color: #1f2328;
+      --subtext-color: #57606a;
+      --border-color: #d0d7de;
+      --card-bg: #ffffff;
+      --accent-color: #0969da;
+      --hover-bg: #eaeef2;
+      --btn-blue: #2d88d8;
+      --btn-blue-hover: #1f74c0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.25s ease, color 0.25s ease;
+      overflow-x: hidden;
+    }
+
+    /* Màn hình khởi động có animation 3 giây rồi mờ dần */
+    .splash-screen {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      z-index: 100;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.65s ease, visibility 0.65s ease;
+    }
+
+    .splash-screen.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-avatar-ring {
+      position: relative;
+      width: 124px;
+      height: 124px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .splash-ring-arc {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: var(--accent-color);
+      border-right-color: rgba(88, 166, 255, 0.35);
+      animation: splashSpin 1.15s linear infinite;
+    }
+
+    .splash-avatar {
+      width: 106px;
+      height: 106px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-color);
+      box-shadow: 0 0 26px rgba(88, 166, 255, 0.35);
+      animation: splashAvatarPulse 1.5s ease-in-out infinite;
+    }
+
+    .splash-brand {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      color: var(--text-color);
+    }
+
+    .splash-status {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--subtext-color);
+    }
+
+    .splash-progress-track {
+      width: 170px;
+      height: 4px;
+      border-radius: 999px;
+      background-color: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    body.light-theme .splash-progress-track {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .splash-progress-bar {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-color), #38bdf8);
+      transform-origin: left center;
+      animation: splashLoad3s linear forwards;
+    }
+
+    @keyframes splashSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes splashAvatarPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    @keyframes splashLoad3s {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+
+    /* Thanh Header trên cùng (cố định trên màn hình, chạy theo khi cuộn trang) */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .left-controls,
+    .menu-btn {
+      pointer-events: auto;
+    }
+
+    /* Cột góc trên bên trái: Đồng hồ */
+    .left-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .vn-clock {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: auto;
+      max-width: calc(100vw - 82px);
+      min-height: 46px;
+      font-size: 14px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+      transition: max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  padding 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.45s ease,
+                  border-color 0.3s ease;
+    }
+
+    .vn-clock.collapsed-clock {
+      width: auto;
+      padding: 8px 14px;
+      min-height: 38px;
+    }
+
+    .vn-clock-quote-wrap {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: 195px;
+      margin-right: 14px;
+      opacity: 1;
+      overflow: hidden;
+      transform: translateX(0);
+      transition: flex-basis 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  margin-right 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.35s ease,
+                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .vn-clock-quote-wrap.collapsed {
+      flex: 0 0 0px;
+      max-width: 0;
+      margin-right: 0;
+      opacity: 0;
+      transform: translateX(-14px);
+      pointer-events: none;
+    }
+
+    .vn-clock-quote {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-color);
+      opacity: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    .vn-clock-time {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-color);
+      flex-shrink: 0;
+    }
+
+    .vn-clock-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      line-height: 1;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+
+    .vn-clock-icon svg,
+    .vn-clock-icon img {
+      width: 19px;
+      height: 19px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .theme-toggle-btn {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--text-color);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--hover-bg);
+      border-color: var(--accent-color);
+    }
+
+    /* Nút 3 gạch góc trên bên phải */
+    .menu-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .menu-btn span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background-color: var(--text-color);
+      border-radius: 2px;
+      transition: 0.2s;
+    }
+
+    /* Khu vực trang đầu (Avatar + Tag + Greeting + Name + Bio) */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 84px 20px 40px;
+      position: relative;
+    }
+
+    .avatar {
+      width: 144px;
+      height: 144px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-color);
+      box-shadow: 0 0 24px rgba(88, 166, 255, 0.25);
+      margin-bottom: 14px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--subtext-color);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .hero-greeting {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-color);
+      opacity: 0.9;
+      margin-bottom: 6px;
+    }
+
+    .hero-name-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .username {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: var(--text-color);
+    }
+
+    .verified-badge {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .hero-bio-wrap {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--subtext-color);
+    }
+
+    .typewriter-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 19px;
+      background-color: var(--accent-color);
+      margin-left: 3px;
+      animation: blinkCursor 0.8s infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* Khu vực Mục Tải Game 🎮 khi kéo xuống */
+    .games-section {
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 40px 16px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .games-section .section-title {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Card App kiểu App Store / Sideload */
+    .game-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-banner-wrap {
+      position: relative;
+      width: 100%;
+      height: 185px;
+      background-color: #0b192c;
+    }
+
+    .card-banner {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Badge góc trên bên phải: Apple iOS */
+    .ios-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(15, 18, 24, 0.78);
+      backdrop-filter: blur(6px);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    /* Badge góc dưới bên phải: Preview 1 */
+    .preview-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(15, 18, 24, 0.78);
+      backdrop-filter: blur(6px);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .preview-badge span {
+      color: #58a6ff;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 0 18px 18px;
+      position: relative;
+    }
+
+    .app-header-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      margin-top: -34px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .app-icon {
+      width: 74px;
+      height: 74px;
+      border-radius: 18px;
+      object-fit: cover;
+      border: 3px solid var(--card-bg);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      background-color: #1c2128;
+      flex-shrink: 0;
+    }
+
+    .app-info {
+      padding-bottom: 2px;
+    }
+
+    .app-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--text-color);
+    }
+
+    .app-updated {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--accent-color);
+      margin-top: 3px;
+    }
+
+    .download-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 16px;
+      background-color: var(--btn-blue);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 999px;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .download-btn:hover {
+      background-color: var(--btn-blue-hover);
+    }
+
+    .download-btn:active {
+      transform: scale(0.99);
+    }
+
+    /* Lớp phủ làm đen 50% màn hình */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      z-index: 20;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Menu trượt từ bên phải */
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 270px;
+      height: 100%;
+      background-color: var(--card-bg);
+      border-left: 1px solid var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.28s ease;
+      z-index: 30;
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+
+    .drawer-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Hàng trong menu 3 gạch (có icon / logo bên trái) */
+    .menu-link {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: manipulation;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 13px 14px;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .menu-link svg {
+      flex-shrink: 0;
+      opacity: 0.9;
+    }
+
+    .menu-link:hover {
+      background-color: var(--hover-bg);
+      border-color: var(--accent-color);
+    }
+
+    /* Modal chọn phiên bản khi ấn Download */
+    .version-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      z-index: 9999;
+      transition: background-color 0.2s ease;
+      pointer-events: none;
+    }
+
+    .version-modal-backdrop.ios-dim,
+    .version-modal-backdrop.android-dim {
+      background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .version-modal-backdrop.active {
+      display: flex !important;
+    }
+
+    .version-modal {
+      width: 100%;
+      max-width: 460px;
+      background-color: transparent !important;
+      color: #f4f6fb;
+      border: 1.5px solid rgba(255, 255, 255, 0.24);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: none;
+      backdrop-filter: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+      animation: modalFadeIn 0.2s ease;
+      pointer-events: auto;
+    }
+
+    body.light-theme .version-modal {
+      background-color: transparent !important;
+      color: #1f2328;
+      border: 1.5px solid rgba(31, 35, 40, 0.28);
+    }
+
+    .version-modal:active,
+    .version-modal.pressed {
+      border-color: #58a6ff;
+      box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.35);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .version-modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .version-modal-eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #8b949e;
+      margin-bottom: 4px;
+    }
+
+    .version-modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: inherit;
+    }
+
+    .version-modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      background-color: transparent;
+      color: inherit;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.16s ease;
+    }
+
+    body.light-theme .version-modal-close {
+      border: 1.5px solid rgba(31, 35, 40, 0.25);
+      background-color: transparent;
+    }
+
+    .version-modal-close:active {
+      border-color: #58a6ff;
+    }
+
+    .version-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .version-option {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: manipulation;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: inherit;
+      background-color: transparent !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    body.light-theme .version-option {
+      background-color: transparent !important;
+      border: 1.5px solid rgba(31, 35, 40, 0.22);
+    }
+
+    .version-option:hover {
+      background-color: transparent !important;
+    }
+
+    .version-option:active,
+    .version-option.pressed {
+      border-color: #58a6ff;
+      box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.35);
+      background-color: transparent !important;
+    }
+
+    .version-option-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .version-badge-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #ffffff;
+    }
+
+    .version-badge-icon.vn {
+      background: linear-gradient(135deg, #4b55f2, #6366f1);
+    }
+
+    .version-badge-icon.global {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .version-option-name {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .version-option-desc {
+      font-size: 13px;
+      line-height: 1.35;
+      color: #9ba3b4;
+    }
+
+    body.light-theme .version-option-desc {
+      color: #57606a;
+    }
+
+    .version-option-arrow {
+      font-size: 20px;
+      color: #8b949e;
+      flex-shrink: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Màn hình khởi động có animation 3 giây rồi mờ dần -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-avatar-ring">
+      <div class="splash-ring-arc"></div>
+      <img
+        src="https://raw.githubusercontent.com/baothichlamcode/Image/refs/heads/main/IMG_9839.jpeg"
+        alt="Avatar"
+        class="splash-avatar"
+      />
+    </div>
+    <div class="splash-brand">Baothichlamcode</div>
+    <div class="splash-status">Đang khởi động...</div>
+    <div class="splash-progress-track">
+      <div class="splash-progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Thanh trên cùng -->
+  <header class="top-bar">
+    <div class="left-controls">
+      <div class="vn-clock" id="vnClock">
+        <span class="vn-clock-quote-wrap" id="vnClockQuoteWrap">
+          <span class="vn-clock-quote" id="vnClockQuote"></span>
+        </span>
+        <span class="vn-clock-time" id="vnClockTime">--:--:--</span>
+        <span class="vn-clock-icon" id="vnClockIcon">🕒</span>
+      </div>
+    </div>
+
+    <button class="menu-btn" id="menuBtn" aria-label="Mở menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Trang đầu / Trang cá nhân -->
+  <section class="hero-section" id="about">
+    <img
+      src="https://raw.githubusercontent.com/baothichlamcode/Image/refs/heads/main/IMG_9839.jpeg"
+      alt="Avatar"
+      class="avatar"
+    />
+    <div class="hero-tag">Baothichlamcode</div>
+    <div class="hero-greeting">Hi ,I am</div>
+    <div class="hero-name-row">
+      <span class="username">Baothichlamcode</span>
+      <img
+        src="https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9860.png"
+        alt="Tích xanh"
+        class="verified-badge"
+      />
+    </div>
+    <div class="hero-bio-wrap">
+      <span id="heroBioText"></span><span class="typewriter-cursor" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <!-- Mục Tải Game 🎮 -->
+  <section class="games-section" id="tai-game">
+    <h2 class="section-title">Tải Game 🎮</h2>
+
+    <!-- Hàng 1: iOS -->
+    <div class="game-card">
+      <div class="card-banner-wrap">
+        <img
+          src="https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9831.png"
+          alt="Ảnh bìa Delta iOS"
+          class="card-banner"
+        />
+
+        <!-- Badge iOS -->
+        <div class="ios-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.96 6.33c.67-.81 1.12-1.94 1-3.08-.96.04-2.13.64-2.82 1.45-.61.7-.11 1.86-1.01 2.97 1.07.08 2.16-.53 2.83-1.34z"/>
+          </svg>
+          <span>iOS</span>
+        </div>
+
+        <!-- Badge Preview 1 -->
+        <div class="preview-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          Preview <span>1</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="app-header-row">
+          <img
+            src="https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9801.jpeg"
+            alt="Logo Delta iOS"
+            class="app-icon"
+          />
+          <div class="app-info">
+            <div class="app-title">Roblox IOS Client Delta (Global+VNG)</div>
+            <div class="app-updated">Cập nhật 24/11</div>
+          </div>
+        </div>
+
+        <button type="button" id="openVersionModalBtn" class="download-btn" onclick="openVersionModal('ios', event)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+          </svg>
+          <span>Download</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Hàng 2: Android -->
+    <div class="game-card">
+      <div class="card-banner-wrap">
+        <img
+          src="https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9831.png"
+          alt="Ảnh bìa Delta Android"
+          class="card-banner"
+        />
+
+        <!-- Badge Android -->
+        <div class="ios-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24c-2.86-1.21-6.08-1.21-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85l1.84 3.18C4.8 10.85 3.5 12.62 3.5 14.5h17c0-1.88-1.3-3.65-2.9-5.02zM8.5 12.75c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zm7 0c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zM5 15.5v4c0 .55.45 1 1 1h1v2.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V20.5h4v2.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V20.5h1c.55 0 1-.45 1-1v-4H5z"/>
+          </svg>
+          <span>Android</span>
+        </div>
+
+        <!-- Badge Preview 1 -->
+        <div class="preview-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          Preview <span>1</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="app-header-row">
+          <img
+            src="https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9801.jpeg"
+            alt="Logo Delta Android"
+            class="app-icon"
+          />
+          <div class="app-info">
+            <div class="app-title">Roblox Android Client Delta (Global+VNG)</div>
+            <div class="app-updated">Cập nhật 24/11</div>
+          </div>
+        </div>
+
+        <button type="button" id="openAndroidVersionModalBtn" class="download-btn" onclick="openVersionModal('android', event)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+          </svg>
+          <span>Download</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lớp phủ đen 50% -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Thanh Menu bên phải -->
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">Menu</span>
+      <button class="close-btn" id="closeBtn" aria-label="Đóng menu">&times;</button>
+    </div>
+    <div class="menu-items" style="display: flex; flex-direction: column; gap: 10px;">
+      <a
+        href="#about"
+        class="menu-link"
+        id="drawerAboutLink"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v1.2c0 .7.5 1.2 1.2 1.2h16.8c.7 0 1.2-.5 1.2-1.2v-1.2c0-3.2-6.4-4.8-9.6-4.8z"/>
+        </svg>
+        <span>About</span>
+      </a>
+      <a
+        href="#tai-game"
+        class="menu-link"
+        id="drawerDownloadLink"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 12h4m-2-2v4"/>
+          <line x1="15" y1="11" x2="15.01" y2="11"/>
+          <line x1="18" y1="13" x2="18.01" y2="13"/>
+          <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/>
+        </svg>
+        <span>Tải Game</span>
+      </a>
+      <a
+        href="https://baothichlamcode.github.io/obfuscator/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="menu-link"
+      >
+        <span>Obfuscator (Làm Rối Lua)</span>
+      </a>
+    </div>
+
+    <button type="button" class="theme-toggle-btn" id="themeToggle">
+      <svg id="themeToggleIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <span id="themeToggleLabel">Dark Mode</span>
+    </button>
+  </aside>
+
+  <script>
+    // Màn hình khởi động có animation 3 giây rồi mờ dần
+    window.addEventListener("DOMContentLoaded", () => {
+      const splash = document.getElementById("splashScreen");
+      if (splash) {
+        setTimeout(() => {
+          splash.classList.add("fade-out");
+          setTimeout(() => {
+            splash.style.display = "none";
+          }, 700);
+        }, 3000);
+      }
+    });
+
+    // Hiệu ứng gõ chữ bio: chạy lần lượt và dừng hẳn tại "Scroll down to explore 👇" (không lặp lại)
+    const bioPhrases = [
+      "I'm a Developer",
+      "Welcome to my Website! ❤️",
+      "Scroll down to explore 👇"
+    ];
+    const bioTextEl = document.getElementById("heroBioText");
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function tickBioTypewriter() {
+      if (!bioTextEl) return;
+      const currentPhrase = bioPhrases[phraseIndex];
+      const isLastPhrase = phraseIndex === bioPhrases.length - 1;
+
+      if (!isDeleting) {
+        charIndex++;
+        bioTextEl.textContent = Array.from(currentPhrase).slice(0, charIndex).join("");
+        const totalChars = Array.from(currentPhrase).length;
+        if (charIndex === totalChars) {
+          if (isLastPhrase) {
+            return;
+          }
+          isDeleting = true;
+          setTimeout(tickBioTypewriter, 1300);
+          return;
+        }
+        setTimeout(tickBioTypewriter, 75);
+      } else {
+        charIndex--;
+        bioTextEl.textContent = Array.from(currentPhrase).slice(0, charIndex).join("");
+        if (charIndex === 0) {
+          isDeleting = false;
+          phraseIndex++;
+          setTimeout(tickBioTypewriter, 350);
+          return;
+        }
+        setTimeout(tickBioTypewriter, 45);
+      }
+    }
+    tickBioTypewriter();
+
+    // Danh sách câu nói của đồng hồ theo mốc giờ (UTC+7)
+    const CLOCK_SCHEDULE = [
+      { hour: 0,  text: "sục сặс hay sao không ngủ", icon: "🌑" },
+      { hour: 3,  text: "cẩn thận ma bắt =))",       icon: "🌓" },
+      { hour: 5,  text: "Good morning",               icon: "🌤️" },
+      { hour: 6,  text: "đi học đi thằng em",        icon: "🌤️" },
+      { hour: 9,  text: "ăn sáng chưa thằng em",      icon: "🌤️" },
+      { hour: 11, text: "mới đi học về à",            icon: "🌤️" },
+      { hour: 12, text: "ăn trưa chưa thằng em",      icon: "🌤️" },
+      { hour: 14, text: "Good Afternoon",             icon: "🌤️", iconHtml: '<svg viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.2 6.3V3.2" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M10.4 8.7L8.2 6.5" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M22 8.7L24.2 6.5" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M23.5 14.2H26.4" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M21.8 19.6L23.6 21.4" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M12.3 11.4C12.5 8.8 14.6 6.8 17.2 7.1C19.6 7.3 21.4 9.3 21.3 11.7C21.3 12.6 21 13.4 20.5 14.1" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M7.2 21.4C4.3 21.4 2 19.1 2 16.2C2 13.6 3.9 11.5 6.4 11.1C7.4 8.7 9.8 7.1 12.6 7.1C15.9 7.1 18.7 9.4 19.3 12.6C21.2 13.1 22.6 14.8 22.6 16.9C22.6 19.4 20.6 21.4 18.1 21.4H7.2Z" fill="#1ca66b"/></svg>' },
+      { hour: 16, text: "mới đi học về à",            icon: "🌤️", iconHtml: '<svg viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.2 6.3V3.2" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M10.4 8.7L8.2 6.5" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M22 8.7L24.2 6.5" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M23.5 14.2H26.4" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M21.8 19.6L23.6 21.4" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M12.3 11.4C12.5 8.8 14.6 6.8 17.2 7.1C19.6 7.3 21.4 9.3 21.3 11.7C21.3 12.6 21 13.4 20.5 14.1" stroke="#1ca66b" stroke-width="2.1" stroke-linecap="round"/><path d="M7.2 21.4C4.3 21.4 2 19.1 2 16.2C2 13.6 3.9 11.5 6.4 11.1C7.4 8.7 9.8 7.1 12.6 7.1C15.9 7.1 18.7 9.4 19.3 12.6C21.2 13.1 22.6 14.8 22.6 16.9C22.6 19.4 20.6 21.4 18.1 21.4H7.2Z" fill="#1ca66b"/></svg>' },
+      { hour: 17, text: "trời sắp tối rồi kìa",       icon: "🌇" },
+      { hour: 18, text: "tắm chưa thằng em",          icon: "🌙" },
+      { hour: 19, text: "ăn cơm tối chưa thằng em",   icon: "🌙" },
+      { hour: 20, text: "chưa học hả thằng em",       icon: "🌙" },
+      { hour: 21, text: "ngủ chưa thằng em",          icon: "🌙" },
+      { hour: 23, text: "ngủ đi thằng em",            icon: "🌙" }
+    ];
+
+    let showClockQuoteOnEntry = true;
+
+    function getClockMessageForHour(hour) {
+      let matched = CLOCK_SCHEDULE[0];
+      for (const item of CLOCK_SCHEDULE) {
+        if (hour >= item.hour) {
+          matched = item;
+        }
+      }
+      return matched;
+    }
+
+    // Cập nhật đồng hồ số theo múi giờ Việt Nam (UTC+7) + câu nói hiển thị 10s khi vào web
+    function updateVietnamClock() {
+      const now = new Date();
+      const vnParts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Ho_Chi_Minh",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).formatToParts(now);
+
+      const hourStr = vnParts.find(p => p.type === "hour")?.value || "00";
+      const minStr  = vnParts.find(p => p.type === "minute")?.value || "00";
+      const secStr  = vnParts.find(p => p.type === "second")?.value || "00";
+      const hourNum = parseInt(hourStr, 10);
+
+      const matched   = getClockMessageForHour(hourNum);
+      const quoteWrap = document.getElementById("vnClockQuoteWrap");
+      const quoteEl   = document.getElementById("vnClockQuote");
+      const timeEl    = document.getElementById("vnClockTime");
+      const iconEl    = document.getElementById("vnClockIcon");
+
+      if (timeEl) {
+        timeEl.textContent = `${hourStr}:${minStr}:${secStr}`;
+      }
+      function getClockIconUrlByHour(h) {
+        if (h >= 5 && h < 14) {
+          return "https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9884.png";
+        }
+        if (h >= 14 && h < 18) {
+          return "https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9885.png";
+        }
+        if (document.body.classList.contains("light-theme")) {
+          return "https://raw.githubusercontent.com/baothichlamcode/Image/refs/heads/main/IMG_9904.png";
+        }
+        return "https://github.com/baothichlamcode/Image/raw/refs/heads/main/IMG_9886.png";
+      }
+
+      if (iconEl) {
+        const iconUrl = getClockIconUrlByHour(hourNum);
+        iconEl.innerHTML = `<img src="${iconUrl}" alt="Clock icon" />`;
+      }
+      const clockEl = document.getElementById("vnClock");
+      if (quoteEl && quoteWrap) {
+        if (showClockQuoteOnEntry) {
+          quoteEl.textContent = matched.text;
+          quoteWrap.classList.remove("collapsed");
+          if (clockEl) clockEl.classList.remove("collapsed-clock");
+        } else {
+          quoteWrap.classList.add("collapsed");
+          if (clockEl) clockEl.classList.add("collapsed-clock");
+        }
+      }
+    }
+
+    updateVietnamClock();
+    setInterval(updateVietnamClock, 1000);
+
+    // Kéo thu gọn câu nói trên đồng hồ mượt mà sau 10 giây kể từ lúc vào web
+    setTimeout(() => {
+      showClockQuoteOnEntry = false;
+      updateVietnamClock();
+    }, 10000);
+
+    // Xử lý đóng/mở menu & lớp phủ đen 50%
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
+    const overlay = document.getElementById("overlay");
+    const drawer = document.getElementById("drawer");
+
+    function openMenu() {
+      overlay.classList.add("active");
+      drawer.classList.add("active");
+    }
+
+    function closeMenu() {
+      overlay.classList.remove("active");
+      drawer.classList.remove("active");
+    }
+
+    menuBtn.addEventListener("click", openMenu);
+    closeBtn.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+
+    // Xử lý chuyển đổi Theme Dark / Light (Mặc định Dark)
+    const themeToggle = document.getElementById("themeToggle");
+    const themeToggleLabel = document.getElementById("themeToggleLabel");
+    const themeToggleIcon = document.getElementById("themeToggleIcon");
+    const body = document.body;
+
+    const MOON_ICON_PATH = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    const SUN_ICON_PATH = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("light-theme");
+      const isLight = body.classList.contains("light-theme");
+      if (themeToggleLabel) {
+        themeToggleLabel.textContent = isLight ? "Light Mode" : "Dark Mode";
+      }
+      if (themeToggleIcon) {
+        themeToggleIcon.innerHTML = isLight ? SUN_ICON_PATH : MOON_ICON_PATH;
+      }
+      updateVietnamClock();
+    });
+    // Khi ấn "About" trong menu thì đóng menu và cuộn mượt lên trang cá nhân
+    const drawerAboutLink = document.getElementById("drawerAboutLink");
+    if (drawerAboutLink) {
+      drawerAboutLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        closeMenu();
+        const aboutSection = document.getElementById("about");
+        if (aboutSection) {
+          aboutSection.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
+
+    // Khi ấn "Tải Game" trong menu thì đóng menu và cuộn mượt xuống mục Tải Game
+    const drawerDownloadLink = document.getElementById("drawerDownloadLink");
+    if (drawerDownloadLink) {
+      drawerDownloadLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        closeMenu();
+        const targetSection = document.getElementById("tai-game");
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
+
+    // Phát nhạc ngay khi người dùng chạm hoặc click vào bất kỳ đâu trên trang
+    const bgAudio = new Audio("https://files.catbox.moe/icb41r.mp3");
+    bgAudio.loop = true;
+    bgAudio.preload = "auto";
+
+    let isMusicStarted = false;
+
+    function triggerMusicOnAnyTouch() {
+      if (isMusicStarted) return;
+      const playPromise = bgAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          isMusicStarted = true;
+          removeTouchListeners();
+        }).catch(() => {
+          // Giữ listener để thử lại ở lần chạm kế tiếp nếu trình duyệt chưa cho phép
+        });
+      }
+    }
+
+    function removeTouchListeners() {
+      document.removeEventListener("touchstart", triggerMusicOnAnyTouch);
+      document.removeEventListener("pointerdown", triggerMusicOnAnyTouch);
+      document.removeEventListener("click", triggerMusicOnAnyTouch);
+      document.removeEventListener("keydown", triggerMusicOnAnyTouch);
+    }
+
+    document.addEventListener("touchstart", triggerMusicOnAnyTouch, { passive: true });
+    document.addEventListener("pointerdown", triggerMusicOnAnyTouch, { passive: true });
+    document.addEventListener("click", triggerMusicOnAnyTouch, { passive: true });
+    document.addEventListener("keydown", triggerMusicOnAnyTouch, { passive: true });
+
+    // Chặn giữ lâu hiện preview link / bôi đen / menu ngữ cảnh cho cả 4 lựa chọn iOS & Android
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+
+    document.addEventListener("selectstart", (e) => {
+      if (e.target.closest(".version-option, .version-modal, .menu-link")) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener("dragstart", (e) => {
+      if (e.target.closest(".version-option, .version-modal, .menu-link")) {
+        e.preventDefault();
+      }
+    });
+
+    // Mở / đóng bảng chọn phiên bản khi ấn Download (hỗ trợ cả iOS & Android)
+    const openVersionModalBtn = document.getElementById("openVersionModalBtn");
+    const openAndroidVersionModalBtn = document.getElementById("openAndroidVersionModalBtn");
+    const closeVersionModalBtn = document.getElementById("closeVersionModalBtn");
+    const versionModalBackdrop = document.getElementById("versionModalBackdrop");
+
+    const VERSION_CONFIGS = {
+      ios: {
+        title: "Roblox IOS Client Delta (Global+VNG)",
+        vnUrl: "https://baothichlamcode.github.io/delta.vn/",
+        globalUrl: "https://baothichlamcode.github.io/delta/"
+      },
+      android: {
+        title: "Roblox Android Client Delta (Global+VNG)",
+        vnUrl: "https://baothichlamcode.github.io/delta.vn.android",
+        globalUrl: "https://baothichlamcode.github.io/delta.android"
+      }
+    };
+
+    window.openVersionModal = function(platformOrEvent, maybeEvent) {
+      let platform = "ios";
+      let ev = maybeEvent;
+      if (typeof platformOrEvent === "string") {
+        platform = platformOrEvent;
+      } else {
+        ev = platformOrEvent;
+      }
+      if (ev) {
+        ev.stopPropagation();
+      }
+
+      const cfg = VERSION_CONFIGS[platform] || VERSION_CONFIGS.ios;
+      const modalTitleEl = document.getElementById("versionModalTitle");
+      const vnLinkEl = document.getElementById("versionVnOptionLink");
+      const globalLinkEl = document.getElementById("versionGlobalOptionLink");
+
+      if (modalTitleEl) modalTitleEl.textContent = cfg.title;
+      if (vnLinkEl) vnLinkEl.href = cfg.vnUrl;
+      if (globalLinkEl) globalLinkEl.href = cfg.globalUrl;
+
+      const modalEl = document.getElementById("versionModalBackdrop");
+      if (modalEl) {
+        modalEl.classList.toggle("ios-dim", platform === "ios");
+        modalEl.classList.toggle("android-dim", platform === "android");
+        modalEl.classList.add("active");
+        modalEl.style.setProperty("display", "flex", "important");
+      }
+    };
+
+    function openVersionModal(platformOrEvent, maybeEvent) {
+      window.openVersionModal(platformOrEvent, maybeEvent);
+    }
+
+    window.closeVersionModal = function(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      const modalEl = document.getElementById("versionModalBackdrop");
+      if (modalEl) {
+        modalEl.classList.remove("active", "ios-dim", "android-dim");
+        modalEl.style.setProperty("display", "none", "important");
+      }
+    };
+
+    function closeVersionModal() {
+      window.closeVersionModal();
+    }
+
+    if (openVersionModalBtn) {
+      openVersionModalBtn.addEventListener("click", (e) => window.openVersionModal("ios", e));
+    }
+
+    if (openAndroidVersionModalBtn) {
+      openAndroidVersionModalBtn.addEventListener("click", (e) => window.openVersionModal("android", e));
+    }
+
+    if (closeVersionModalBtn) {
+      closeVersionModalBtn.addEventListener("click", (e) => window.closeVersionModal(e));
+    }
+
+    if (versionModalBackdrop) {
+      const modalBoxEl = versionModalBackdrop.querySelector(".version-modal");
+
+      function clearPressedState() {
+        if (modalBoxEl) modalBoxEl.classList.remove("pressed");
+        versionModalBackdrop.querySelectorAll(".version-option.pressed").forEach((el) => {
+          el.classList.remove("pressed");
+        });
+      }
+
+      versionModalBackdrop.addEventListener("pointerdown", (e) => {
+        clearPressedState();
+        const optionEl = e.target.closest(".version-option");
+        if (optionEl) {
+          optionEl.classList.add("pressed");
+        } else if (modalBoxEl && modalBoxEl.contains(e.target)) {
+          modalBoxEl.classList.add("pressed");
+        }
+      });
+
+      document.addEventListener("pointerup", clearPressedState);
+      document.addEventListener("pointercancel", clearPressedState);
+
+      function handleOutsideModalDismiss(e) {
+        if (!versionModalBackdrop.classList.contains("active")) return;
+        const modalBox = versionModalBackdrop.querySelector(".version-modal");
+        if (modalBox && modalBox.contains(e.target)) return;
+        if (e.target.closest("#openVersionModalBtn, #openAndroidVersionModalBtn")) return;
+        closeVersionModal();
+      }
+
+      document.addEventListener("click", handleOutsideModalDismiss, true);
+      document.addEventListener("touchend", handleOutsideModalDismiss, true);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeVersionModal();
+      }
+    });
+  </script>
+
+  <!-- Bảng chọn phiên bản khi ấn Download -->
+  <div class="version-modal-backdrop" id="versionModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="versionModalTitle">
+    <div class="version-modal">
+      <div class="version-modal-top">
+        <div>
+          <div class="version-modal-eyebrow">CHỌN PHIÊN BẢN</div>
+          <div class="version-modal-title" id="versionModalTitle">Roblox IOS Client Delta (Global+VNG)</div>
+        </div>
+        <button type="button" class="version-modal-close" id="closeVersionModalBtn" aria-label="Đóng" onclick="closeVersionModal()">&times;</button>
+      </div>
+
+      <div class="version-list">
+        <a
+          id="versionVnOptionLink"
+          href="https://baothichlamcode.github.io/delta.vn/"
+          target="_blank"
+          rel="noopener noreferrer"
+          draggable="false"
+          class="version-option"
+        >
+          <div class="version-option-left">
+            <div class="version-badge-icon vn" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.3 9.7L22 12L14.3 14.3L12 22L9.7 14.3L2 12L9.7 9.7L12 2Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="version-option-name" style="margin-bottom: 0;">Roblox VN</div>
+            </div>
+          </div>
+          <div class="version-option-arrow">&rsaquo;</div>
+        </a>
+
+        <a
+          id="versionGlobalOptionLink"
+          href="https://baothichlamcode.github.io/delta/"
+          target="_blank"
+          rel="noopener noreferrer"
+          draggable="false"
+          class="version-option"
+        >
+          <div class="version-option-left">
+            <div class="version-badge-icon global" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13 2L4 14H11L10 22L20 10H13L13 2Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="version-option-name" style="margin-bottom: 0;">Roblox Quốc Tế(Global)</div>
+            </div>
+          </div>
+          <div class="version-option-arrow">&rsaquo;</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
