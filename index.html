@@ -178,9 +178,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: flex-start;
-      width: auto;
       max-width: calc(100vw - 82px);
-      min-height: 46px;
+      min-height: 44px;
       font-size: 14px;
       font-weight: 600;
       font-variant-numeric: tabular-nums;
@@ -190,41 +189,53 @@
       border-radius: 999px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
       overflow: hidden;
-      transition: max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                  padding 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                  box-shadow 0.45s ease,
+      transition: padding 1s cubic-bezier(0.22, 1, 0.36, 1),
+                  min-height 1s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 1s ease,
                   border-color 0.3s ease;
     }
 
     .vn-clock.collapsed-clock {
-      width: auto;
       padding: 8px 14px;
       min-height: 38px;
+      animation: clockPullIn 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes clockPullIn {
+      0% {
+        transform: translateX(0) scale(1);
+      }
+      40% {
+        transform: translateX(-6px) scale(0.97);
+      }
+      100% {
+        transform: translateX(0) scale(1);
+      }
     }
 
     .vn-clock-quote-wrap {
       display: inline-flex;
       align-items: center;
-      flex: 0 1 auto;
       min-width: 0;
-      max-width: 195px;
-      margin-right: 14px;
+      max-width: 210px;
+      margin-right: 12px;
       opacity: 1;
       overflow: hidden;
       transform: translateX(0);
-      transition: flex-basis 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                  max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                  margin-right 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                  opacity 0.35s ease,
-                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: width 1s cubic-bezier(0.22, 1, 0.36, 1),
+                  max-width 1s cubic-bezier(0.22, 1, 0.36, 1),
+                  margin-right 1s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 1s ease,
+                  transform 1s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .vn-clock-quote-wrap.collapsed {
-      flex: 0 0 0px;
-      max-width: 0;
-      margin-right: 0;
+      width: 0px !important;
+      max-width: 0px !important;
+      margin-right: 0px !important;
       opacity: 0;
-      transform: translateX(-14px);
+      transform: translateX(-18px);
       pointer-events: none;
     }
 
@@ -456,6 +467,27 @@
     @keyframes blinkCursor {
       0%, 49% { opacity: 1; }
       50%, 100% { opacity: 0; }
+    }
+
+    .hero-signature-wrap {
+      width: 100%;
+      max-width: 440px;
+      margin: 22px auto 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 10px;
+    }
+
+    .hero-signature-img {
+      width: 100%;
+      max-width: 410px;
+      height: auto;
+      max-height: 155px;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     /* Khu vực Mục Tải Game 🎮 khi kéo xuống */
@@ -973,6 +1005,15 @@
       <div class="hero-bio-wrap">
         <span id="heroBioText"></span><span class="typewriter-cursor" aria-hidden="true"></span>
       </div>
+      <div class="hero-signature-wrap">
+        <img
+          id="heroSignatureImg"
+          src="https://github.com/Baothichlammod/image/raw/refs/heads/main/IMG_9909.png"
+          alt="Chữ ký Baothichlammod"
+          class="hero-signature-img"
+          draggable="false"
+        />
+      </div>
     </div>
   </section>
 
@@ -1115,7 +1156,7 @@
         <span>Tải Game</span>
       </a>
       <a
-        href="https://baothichlamcode.github.io/obfuscator/"
+        href="https://baothichlammod.github.io/obfuscator/"
         target="_blank"
         rel="noopener noreferrer"
         class="menu-link"
@@ -1265,9 +1306,15 @@
       const clockEl = document.getElementById("vnClock");
       if (quoteEl && quoteWrap) {
         if (showClockQuoteOnEntry) {
-          quoteEl.textContent = matched.text;
+          if (quoteEl.textContent !== matched.text) {
+            quoteEl.textContent = matched.text;
+          }
           quoteWrap.classList.remove("collapsed");
           if (clockEl) clockEl.classList.remove("collapsed-clock");
+          const exactWidth = Math.min(quoteEl.scrollWidth, 210);
+          if (exactWidth > 0) {
+            quoteWrap.style.width = exactWidth + "px";
+          }
         } else {
           quoteWrap.classList.add("collapsed");
           if (clockEl) clockEl.classList.add("collapsed-clock");
@@ -1278,7 +1325,7 @@
     updateVietnamClock();
     setInterval(updateVietnamClock, 1000);
 
-    // Kéo thu gọn câu nói trên đồng hồ mượt mà sau 10 giây kể từ lúc vào web
+    // Kéo thu gọn đồng hồ mượt mà trong 1 giây sau khi hiển thị 10 giây
     setTimeout(() => {
       showClockQuoteOnEntry = false;
       updateVietnamClock();
@@ -1313,6 +1360,16 @@
     const MOON_ICON_PATH = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
     const SUN_ICON_PATH = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
 
+    const DARK_SIGNATURE_URL = "https://github.com/Baothichlammod/image/raw/refs/heads/main/IMG_9909.png";
+    const LIGHT_SIGNATURE_URL = "https://github.com/Baothichlammod/image/raw/refs/heads/main/IMG_9908.png";
+
+    function updateSignatureByTheme() {
+      const sigEl = document.getElementById("heroSignatureImg");
+      if (!sigEl) return;
+      const isLight = document.body.classList.contains("light-theme");
+      sigEl.src = isLight ? LIGHT_SIGNATURE_URL : DARK_SIGNATURE_URL;
+    }
+
     themeToggle.addEventListener("click", () => {
       body.classList.toggle("light-theme");
       const isLight = body.classList.contains("light-theme");
@@ -1322,8 +1379,11 @@
       if (themeToggleIcon) {
         themeToggleIcon.innerHTML = isLight ? SUN_ICON_PATH : MOON_ICON_PATH;
       }
+      updateSignatureByTheme();
       updateVietnamClock();
     });
+
+    updateSignatureByTheme();
     // Khi ấn "About" trong menu thì đóng menu và cuộn mượt lên trang cá nhân
     const drawerAboutLink = document.getElementById("drawerAboutLink");
     if (drawerAboutLink) {
@@ -1387,14 +1447,19 @@
       e.preventDefault();
     });
 
+    function isTargetInProtectedSelector(target, selector) {
+      const el = target && target.nodeType === 1 ? target : target && target.parentElement;
+      return Boolean(el && typeof el.closest === "function" && el.closest(selector));
+    }
+
     document.addEventListener("selectstart", (e) => {
-      if (e.target.closest(".version-option, .version-modal, .menu-link")) {
+      if (isTargetInProtectedSelector(e.target, ".version-option, .version-modal, .menu-link")) {
         e.preventDefault();
       }
     });
 
     document.addEventListener("dragstart", (e) => {
-      if (e.target.closest(".version-option, .version-modal, .menu-link")) {
+      if (isTargetInProtectedSelector(e.target, ".version-option, .version-modal, .menu-link")) {
         e.preventDefault();
       }
     });
